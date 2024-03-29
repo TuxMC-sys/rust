@@ -15,6 +15,4 @@ fn fib(n: u64) -> u64{
     }
 }
 fn ftc(n: i32) -> i32{((f64::from(n)-32.0)*(5.0/9.0)).round() as i32}
-fn append_world(s: &str)->String{
-    String::from(s) + " world!"
-}
+fn append_world(s: &str)->String{String::from(s) + " world!"}
