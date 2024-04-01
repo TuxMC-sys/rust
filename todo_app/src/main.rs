@@ -1,8 +1,7 @@
-use std::{fs,str,io, io::Write};
+use std::{fs,str,io, io::Write, path::PathBuf};
 use serde::{Deserialize, Serialize};
 use serde_json::to_writer;
-
-const TODO_FILE: &str = "../../Documents/rust_todo.json";
+use dirs::home_dir;
 const YES_LIST: [&str; 5] = ["y\n", "yes\n", "Y\n","YES\n","true\n"];
 
 #[derive(Serialize, Deserialize)]
@@ -14,7 +13,7 @@ fn main(){
     println!("This is a program for making, managing, and reading todo lists.\n");
     let mut todos = parse_json().todo_list;
     if ask_user_continue(){
-        remove_todos(&mut todos);
+        if !todos.is_empty(){remove_todos(&mut todos);}
         add_todos(&mut todos);
         save_todo_list(&todos);
     }else {print_current_todo(&todos)}
@@ -31,8 +30,10 @@ fn ask_user_continue() -> bool{
 }
 
 fn print_current_todo(todos: &[String]){
-    println!("Your current todo's are:");
-    todos.iter().enumerate().for_each(|(i,x)|println!("{}. {}",i+1,x));
+    if !todos.is_empty(){
+        println!("Your current todo's are: ");
+        todos.iter().enumerate().for_each(|(i,x)|println!("{}. {}",i+1,x));
+    }else{println!("Your todo list is empty!")};
 }
 
 fn print_flush(print_str: &str){
@@ -45,9 +46,11 @@ fn parse_json() -> Todo{
 }
 
 fn init_file() -> String{
-    str::from_utf8(&fs::read(TODO_FILE).expect("File not found")).unwrap().to_string()
+    str::from_utf8(&fs::read(todo_file()).expect("File not found")).unwrap().to_string()
 }
-
+fn todo_file() -> PathBuf{
+    PathBuf::from(&[home_dir().unwrap().display().to_string(),"/Documents/rust_todo.json".to_string()].join(""))
+}
 fn add_todos(todos: &mut Vec<String>){
     let mut item: String = String::from("");
     loop{
@@ -55,7 +58,7 @@ fn add_todos(todos: &mut Vec<String>){
         print_flush("If you want to add a todo, please type it in here, otherwise hit enter: ");
         io::stdin().read_line(&mut item).expect("Failed to read line"); 
         if item == *"\n"{break}
-        todos.push(item.clone());
+        todos.push((&item[0..item.len()-1]).to_string());
         println!("Your new todo list is {:?}",todos);
     }
 }
@@ -80,7 +83,8 @@ fn remove_todos(todos: &mut Vec<String>){
 
 fn save_todo_list(todos: &Vec<String>){
     let mut save_string: String = String::from("");
-    println!("Your todos are \n {:#?}.", todos);
+    println!("Your todos are: ");
+    print_current_todo(todos);
     print_flush("Do you want to save the todo list (y, yes, Y or n, no, N)?: ");
     io::stdin().read_line(&mut save_string).expect("Failed to read line"); 
 
@@ -88,7 +92,7 @@ fn save_todo_list(todos: &Vec<String>){
         let save_string = Todo{
             todo_list: todos.to_owned()
         };
-        to_writer(fs::File::create_new(TODO_FILE).unwrap(),&save_string).unwrap();
+        to_writer(fs::File::create(todo_file()).unwrap(),&save_string).unwrap();
     }}
 }
 
