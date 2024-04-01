@@ -13,20 +13,20 @@ struct Todo {
 fn main(){
     println!("This is a program for making, managing, and reading todo lists.\n");
     let mut todos = parse_json().todo_list;
-    if let ask_user_continue(){}
+    if ask_user_continue(){
         remove_todos(&mut todos);
         add_todos(&mut todos);
         save_todo_list(&todos);
-    }else {print_current_todo()}
+    }else {print_current_todo(&todos)}
 }
 
 fn ask_user_continue() -> bool{
-    let mut user_response = "";
+    let mut user_response = String::from("");
     println!("If you want to edit your todo list, type y or yes then hit enter, else if you just want to see it, hit enter.");
     io::stdin().read_line(&mut user_response).expect("Failed to read line"); 
     for val in YES_LIST{if user_response == *val{
-        true
-    }
+        return true;
+    }}
     false
 }
 
