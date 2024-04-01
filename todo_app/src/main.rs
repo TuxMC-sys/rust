@@ -2,6 +2,7 @@ use std::{fs,str,io, io::Write, path::PathBuf};
 use serde::{Deserialize, Serialize};
 use serde_json::to_writer;
 use dirs::home_dir;
+use no_panic::no_panic;
 const YES_LIST: [&str; 5] = ["y\n", "yes\n", "Y\n","YES\n","true\n"];
 
 #[derive(Serialize, Deserialize)]

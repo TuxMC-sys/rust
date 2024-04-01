@@ -10,3 +10,4 @@ serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 relative-path = "1.9.2"
 dirs = "5.0.1"
+no-panic = "0.1"
