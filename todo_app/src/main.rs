@@ -16,9 +16,11 @@ fn main(){
     let mut todos = parse_json().todo_list;
     remove_todos(&mut todos);
 }
+fn add_todos(todos: &mut Vec<String>){
+    println!("If you want to add a todo, please type it in here, otherwise hit enter: ")
+}
 fn remove_todos(todos: &mut Vec<String>){
     let mut remove_numchar: String = "".to_string();
-    let print_flush = |x|{print!("{}",x); io::stdout().flush().unwrap();};
     println!("If you want to remove a todo from the list, please input the number of the todo.\n");
     print_current_todo(&todos);
     print_flush("\nEnter the the number of the todo item to remove or enter 0 if you don't want to remove anything: ");
@@ -42,4 +44,8 @@ fn parse_json() -> Todo{
 }
 fn init_file() -> String{
     str::from_utf8(&fs::read(TODO_FILE).expect("File not found")).unwrap().to_string()
+}
+fn print_flush(print_str: &str){
+    print!("{}",x); 
+    io::stdout().flush().unwrap();
 }
