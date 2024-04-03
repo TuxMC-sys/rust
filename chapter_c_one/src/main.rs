@@ -5,7 +5,7 @@ fn main() {
     println!("{}", new_s);
     println!("Fibonacci number {} is {}.",func_ops.0, fib(func_ops.0));
     println!("The sum of {:?} is {}.", func_ops.2, sum(&func_ops.2));
-    println!("{} degrees fahrenheit is {} degrees celcius.", func_ops.1, ftc(func_ops.1));
+    println!("{} degrees fahrenheit is {} degrees celsius.", func_ops.1, ftc(func_ops.1));
 }
 fn sum(nums: &[i32]) -> i32 {nums.iter().sum()}
 fn fib(n: u64) -> u64{
