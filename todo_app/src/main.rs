@@ -33,7 +33,7 @@ fn ask_user_continue() -> bool{
 
 fn print_current_todo(todos: &[String]){
     if !todos.is_empty(){
-        println!("Your current todo's are: ");
+        println!("Your current todos are: ");
         todos.iter().enumerate().for_each(|(i,x)|println!("{}. {}",i+1,x));
     }else{println!("Your todo list is empty!")};
 }
