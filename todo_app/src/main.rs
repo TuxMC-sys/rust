@@ -19,27 +19,26 @@ fn main() {
     let mut todos = parse_json()
         .unwrap_or_else(|_| Todo { todo_list: vec![] })
         .todo_list;
-    if ask_user_continue() {
-        if !todos.is_empty() {
+    if !todos.is_empty() {
+        print_current_todo(&todos);
+        if ask_user_continue() {
             remove_todos(&mut todos);
+        }else {
+            return;
         }
-        add_todos(&mut todos);
-        save_todo_list(&todos);
-    } else {
-        print_current_todo(&todos)
     }
+    add_todos(&mut todos);
+    save_todo_list(&todos);
 }
 
 fn ask_user_continue() -> bool {
     let mut user_response = String::from("");
-    println!("If you want to edit your todo list, type y or yes then hit enter, else if you just want to see it, hit enter.");
+    println!("If you want to edit your todo list, type y or yes then hit enter, otherwise just hit enter.");
     io::stdin()
         .read_line(&mut user_response)
         .expect("Failed to read line; invalid input or var");
-    for val in YES_LIST {
-        if user_response == *val {
-            return true;
-        }
+    if YES_LIST.contains(&&user_response[..]) {
+        return true;
     }
     false
 }
@@ -99,6 +98,9 @@ fn add_todos(todos: &mut Vec<String>) {
 }
 
 fn remove_todos(todos: &mut Vec<String>) {
+    if todos.is_empty() {
+        return;
+    }
     let mut remove_numchar: String = "".to_string();
     println!("If you want to remove a todo from the list, please input the number of the todo.\n");
     print_current_todo(todos);
@@ -115,11 +117,9 @@ fn remove_todos(todos: &mut Vec<String>) {
 
     if remove_num != 0 && remove_num <= todos.len() && !todos.is_empty() {
         todos.remove(remove_num - 1);
-        if !todos.is_empty() {
-            remove_todos(todos);
-        } else {
-            println!("You have no more todos!");
-        }
+        remove_todos(todos);
+    } else {
+        println!("You have no more todos!");
     }
 }
 
@@ -132,16 +132,14 @@ fn save_todo_list(todos: &Vec<String>) {
         .read_line(&mut save_string)
         .expect("Failed to read line");
 
-    for val in YES_LIST {
-        if save_string == *val {
-            let save_string = Todo {
-                todo_list: todos.to_owned(),
-            };
-            to_writer(
-                fs::File::create(todo_file()).expect("file couldn't create"),
-                &save_string,
-            )
-            .expect("Passed var has invalid keys or serialize failed");
-        }
+    if YES_LIST.contains(&&save_string[..]) {
+        let save_string = Todo {
+            todo_list: todos.to_owned(),
+        };
+        to_writer(
+            fs::File::create(todo_file()).expect("file couldn't create"),
+            &save_string,
+        )
+        .expect("Passed var has invalid keys or serialize failed");
     }
 }
