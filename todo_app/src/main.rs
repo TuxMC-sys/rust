@@ -23,7 +23,7 @@ fn main() {
         print_current_todo(&todos);
         if ask_user_continue() {
             remove_todos(&mut todos);
-        }else {
+        } else {
             return;
         }
     }
