@@ -1,4 +1,4 @@
- #Chapter 12 guided grep project
+ # Chapter 12 guided grep project
  If you have something better to do with this crate name, open a GitHub issue, I am pretty prompt.
  I feel like my code is pretty easy to understand but if it isn't, please reference chapter 12 of
  the book, I only changed some organization things and var names.
